@@ -2,26 +2,39 @@
 # luckygoogle.pl - script responsible for opening few searching result from Google Search
 
 from bs4 import element
-import requests, sys, webbrowser, bs4
+import requests
+import sys
+import webbrowser
+import bs4
+from pprint import pprint
 
 print('Searching...')
 res = requests.get('http://google.pl/search?q=' + ' '.join(sys.argv[1:]))
 res.raise_for_status()
 
+with open("debug-html.html", "w") as file:
+    file.write(res.text)
 
 
 soup = bs4.BeautifulSoup(res.text, features="html.parser")
 
-file = open('haha.html', 'w')
-file.write(res.text)
+link_elems = soup.select('a')
+link_elems = [
+    a
+    for a in link_elems
+    if a.get('href', '/url?q=').startswith('/url?q=')
+]
+links = [a.get('href') for a in link_elems]
+links = {
+    link.split('&')[0]: link
+    for link in links 
+    if 'google' not in link
+}
+pprint(links)
 
-link_elems = soup.select('.kCrYT a')
 
+unique_links = ['http://google.pl' + link for link in links.values()][:5]
 
-num_open = min(5, len(link_elems))
+for link in unique_links:
+    webbrowser.open(link)
 
-print(num_open)
-
-
-for i in range(num_open):
-    webbrowser.open('http://google.pl' + link_elems[i].get('href'))
