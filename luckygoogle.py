@@ -9,18 +9,16 @@ res = requests.get('http://google.pl/search?q=' + ' '.join(sys.argv[1:]))
 res.raise_for_status()
 
 
+
 soup = bs4.BeautifulSoup(res.text, features="html.parser")
 
-# link_elems = soup.select('')
-# print(link_elems)
-# num_open = min(5, len(link_elems))
+link_elems = soup.select('.kCrYT a')
+print(link_elems[0])
+print(link_elems[1])
+num_open = min(5, len(link_elems))
 
-# print(num_open)
-
-soupee = bs4.BeautifulSoup(open('szajs.html'), features="html.parser")
-elems = soup.select('.yu')[0] #kurwanonawettegoniewykrywa
-print(elems)
+print(num_open)
 
 
-# for i in range(num_open):
-#     webbrowser.open('http://google.pl' + link_elems[i].get('href'))
+for i in range(num_open):
+    webbrowser.open('http://google.pl' + link_elems[i].get('href'))
