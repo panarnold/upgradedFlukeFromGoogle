@@ -12,9 +12,12 @@ res.raise_for_status()
 
 soup = bs4.BeautifulSoup(res.text, features="html.parser")
 
+file = open('haha.html', 'w')
+file.write(res.text)
+
 link_elems = soup.select('.kCrYT a')
-print(link_elems[0])
-print(link_elems[1])
+
+
 num_open = min(5, len(link_elems))
 
 print(num_open)
